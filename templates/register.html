@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-</head>
-<body>
-    <h1>Welcome to My Flask App</h1>
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+    <h1>Register</h1>
     <form method="POST" action="{{ url_for('register') }}">
         <div>
             <label for="username">Username</label>
@@ -18,20 +15,9 @@
         </div>
         <button type="submit">Register</button>
     </form>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <ul>
-        {% for category, message in messages %}
-            <li class=""alert alert-{{ category }}>{{ message }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-    {% endwith %}
     <a href="/about">About Page</a>
     <p>Already have an account?<a href="/login">Log In</a> </p>
     <form action="{{ url_for('logout') }}" method="GET">
         <button type="submit">Logout</button>
     </form>
-</body>
-</html>
+{% endblock %}

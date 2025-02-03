@@ -1,5 +1,7 @@
 from flask import Flask, render_template, url_for, redirect, request, flash
 from flask_sqlalchemy import SQLAlchemy
+#hashed passwords
+from werkzeug.security import generate_password_hash, check_password_hash
 #for users
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required, UserMixin
 
@@ -25,7 +27,13 @@ class User(UserMixin, db.Model):
     # main elements: id, username, password
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)  # Store hashed password
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 #creating database tables
 with app.app_context():
@@ -51,7 +59,7 @@ def register():
 
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password'] # TO-DO : hash the password
+        password = request.form['password']
         user = User(username=username, password=password)
         db.session.add(user)
         db.session.commit()
@@ -79,7 +87,7 @@ def login():
             flash('login Successfull!', 'success')
             return redirect(url_for('home'))
         else:
-            flash('Login Unsuccessful. Try Again.')
+            flash('Login Unsuccessful. Try Again.', "danger")
 
     return render_template('login.html')
 
