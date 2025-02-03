@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for, redirect, request, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 #hashed passwords
 from werkzeug.security import generate_password_hash, check_password_hash
 #for users
@@ -7,12 +8,14 @@ from flask_login import LoginManager, login_user, logout_user, current_user, log
 
 # Initializing the app
 app = Flask(__name__)
-app.config.from_object('config.Config')
-app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.secret_key = "hello"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.sqlite3'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initializing the database
 db = SQLAlchemy(app)
+#Enabling Flask-Migrate
+migrate = Migrate(app, db) 
 
 ## User Setup ##
 #Initializing LoginManager which connects the app with Flask Login
@@ -60,12 +63,21 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        user = User(username=username, password=password)
-        db.session.add(user)
+
+        # Check if the username is already taken
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            flash("Username already exists. Choose a different one.", "danger")
+            return redirect(url_for('register'))
+
+        # Create a new user and hash the password
+        new_user = User(username=username)
+        new_user.set_password(password)  # Store hashed password
+        db.session.add(new_user)
         db.session.commit()
-        flash('your account has been created!', 'success')
-        # using url_for to avoid hardcoding urls within the app's templates
-        return redirect(url_for('login'))
+
+        flash("Registration successful! You can now log in.", "success")
+        return redirect(url_for('login'))  # Redirect to login page
 
     return render_template('register.html')
 
@@ -81,7 +93,7 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
 
-        if user and user.password == password:
+        if user and user.check_password(password):
             login_user(user)
             # flash(message, category)
             flash('login Successfull!', 'success')
