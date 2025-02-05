@@ -5,9 +5,7 @@ body {
 
 .container {
     max-width: 600px;
-    margin-top: 50px;
     padding: 20px;
-    background: white;
     border-radius: 8px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -24,6 +22,49 @@ button {
     width: 100%;
 }
 
-.navbar {
-    margin-bottom: 20px;
+/* Profile Container */
+.profile-container {
+    position: relative;
+    width: 100%;
+    max-width: 900px; /* Adjust for preferred width */
+    margin: 0 auto; /* Centers the entire profile container */
+    text-align: center; /* Ensures everything inside is centered */
+}
+
+/* Wallpaper (Banner) */
+.banner {
+    width: 100%;
+    height: 250px; /* Adjust for preferred banner height */
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Profile Picture */
+.profile-pic {
+    width: 100px;  
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    bottom: -50px; /* Adjust to move the profile pic below the banner */
+    left: 20px;
+}
+
+/* Username */
+.username {
+    margin-top: 60px;
+    font-size: 33px;
+    font-weight: bold;
+    color: #333;
+    position: relative;
+    text-align: left;
+    padding-left: 17%;
 }

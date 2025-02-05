@@ -4,10 +4,4 @@
 
 {% block content %}
     <h1>Welcome to My Flask App</h1>
-    <a href="/about">About Page</a>
-    <a href="/login">Log In</a>
-    <a href="/register">Register</a>
-    <form action="{{ url_for('logout') }}" method="GET">
-        <button type="submit">Logout</button>
-    </form>
 {% endblock %}

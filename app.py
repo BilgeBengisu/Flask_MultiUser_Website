@@ -31,6 +31,8 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)  # Store hashed password
+    profile_image = db.Column(db.String(150), default='static/uploads/default_profile.jpg') 
+    wallpaper_image = db.Column(db.String(150), default='static/uploads/default_wallpaper.jpg')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -102,6 +104,13 @@ def login():
             flash('Login Unsuccessful. Try Again.', "danger")
 
     return render_template('login.html')
+
+# User Profile
+@app.route('/profile', methods=['GET'])
+@login_required
+def profile():
+    username = current_user.username
+    return render_template('profile.html', user=current_user)
 
 
 # Route for Logout
