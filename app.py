@@ -133,12 +133,10 @@ def upload_profile_pic():
         return redirect(url_for('profile'))
     
     if file and file.filename:
-        print("in if")
-        filename=secure_filename(file.filename)
+        filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
-        print(filename)
-        current_user.profile_image = f'uploads/{filename}'
+        current_user.profile_image = f'static/uploads/{filename}'
         db.session.commit()
         flash("Profile picture updated successfully!", "success")
 
