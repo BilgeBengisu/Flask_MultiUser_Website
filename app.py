@@ -1,8 +1,10 @@
 from flask import Flask, render_template, url_for, redirect, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+import os
 #hashed passwords
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 #for users
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required, UserMixin
 
@@ -11,6 +13,10 @@ app = Flask(__name__)
 app.secret_key = "hello"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Set the upload folder in app configuration
+UPLOAD_FOLDER = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Initializing the database
 db = SQLAlchemy(app)
@@ -46,12 +52,12 @@ with app.app_context():
 
 ## . ###
 
-#route for Home Page
+# route for Home Page
 @app.route('/')
 def home():
     return render_template('index.html')
 
-#about page
+# about page
 @app.route('/about')
 def about():
     return render_template('about.html')
@@ -106,12 +112,37 @@ def login():
     return render_template('login.html')
 
 # User Profile
-@app.route('/profile', methods=['GET'])
+@app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
     username = current_user.username
     return render_template('profile.html', user=current_user)
 
+@app.route('/upload-profile-picture', methods=['POST'])
+@login_required
+def upload_profile_pic():
+    # Check if the user submitted a file
+    if 'profile_picture' not in request.files:
+        flash('No file selected', 'danger')
+        return redirect(url_for('profile'))
+
+    file = request.files['profile_picture']
+    # If the user doesn't select a file
+    if file.filename == '':
+        flash('No selected file', 'danger')
+        return redirect(url_for('profile'))
+    
+    if file and file.filename:
+        print("in if")
+        filename=secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+        print(filename)
+        current_user.profile_image = f'uploads/{filename}'
+        db.session.commit()
+        flash("Profile picture updated successfully!", "success")
+
+    return redirect(url_for("profile"))
 
 # Route for Logout
 @app.route('/logout')

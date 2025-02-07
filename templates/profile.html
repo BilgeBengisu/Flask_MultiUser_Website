@@ -3,17 +3,28 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
+
     <div class="profile-container">
         <!-- Wallpaper Image -->
         <div class="banner">
             <img class="banner-img" src="{{ current_user.wallpaper_image }}" alt="Wallpaper">
         </div>
-
+        
+        <!-- Profile Picture Upload Form -->
+        <form id="upload-form" method="POST" enctype="multipart/form-data" action="{{ url_for('upload_profile_pic') }}">
+            <input type="file" id="profile-pic-input" name="profile_picture" accept="image/*" style="display: none;">
+            <div class="profile-pic-container" onclick="document.getElementById('profile-pic-input').click();">
+                <img id="profile-pic" src="{{ current_user.profile_image }}" alt="Profile Picture">
+            </div>
+        </form>
         <!-- Profile Picture and Username -->
-        <img class="profile-pic" src="{{ current_user.profile_image }}" alt="Profile Picture">
         <h2 class="username">{{ current_user.username }}</h2>
     </div>
 
     <p>Change your password or other details here.</p>
-    
+{% endblock %}
+
+{% block scripts %}
+    <!-- Link to the JavaScript file -->
+    <script src="{{ url_for('static', filename='js/profile.js') }}"></script>
 {% endblock %}
