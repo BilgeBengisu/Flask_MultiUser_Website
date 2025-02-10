@@ -1,19 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}Register{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/register.css') }}">
+{% endblock %}
 
 {% block content %}
     <h1>Register</h1>
-    <form method="POST" action="{{ url_for('register') }}">
-        <div>
+    <form method="POST" action="{{ url_for('register') }}" class="register-form">
+        <div class="form-group">
             <label for="username">Username</label>
             <input type="text" name="username" id="username" required>
         </div>
-        <div>
+        <div class="form-group">
             <label for="password">Password</label>
             <input type="password" name="password" id="password" required>
         </div>
-        <button type="submit">Register</button>
+        <button type="submit" class="btn-register">Register</button>
     </form>
-    <p>Already have an account?<a href="/login">Log In</a> </p>
+    <p class="login-text">Already have an account?<a href="/login" class="login-link">Log In</a> </p>
 {% endblock %}
