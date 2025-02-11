@@ -14,6 +14,7 @@ class Book(db.Model):
     title = db.Column(db.String(255), nullable=False)
     author = db.Column(db.String(255), nullable=False)
     description = db.Column(db.String(255), nullable=False)
+    genre = db.Column(db.String(255))
     cover_image = db.Column(db.String(255), default="static/uploads/default_book.jpg")
     published_year = db.Column(db.Integer)
     isbn = db.Column(db.String(20), unique=True, nullable=True)

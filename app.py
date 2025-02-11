@@ -119,7 +119,7 @@ def profile():
     return render_template('profile.html', user=current_user)
 
 # Book Info Page
-@app.route('/book-info.html', methods=["GET", "POST"])
+@app.route('/book-info', methods=["GET", "POST"])
 @login_required
 def book_info():
     # get the book from database
