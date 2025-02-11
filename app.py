@@ -118,6 +118,14 @@ def profile():
     username = current_user.username
     return render_template('profile.html', user=current_user)
 
+# Book Info Page
+@app.route('/book-info.html', methods=["GET", "POST"])
+@login_required
+def book_info():
+    # get the book from database
+    return render_template("/book-info.html")
+
+
 @app.route('/upload-profile-picture', methods=['POST'])
 @login_required
 def upload_profile_pic():

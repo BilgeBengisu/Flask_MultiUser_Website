@@ -4,6 +4,8 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/register.css') }}">
 {% endblock %}
 
+{% block title %}Register{% endblock %}
+
 {% block content %}
     <h1>Register</h1>
     <form method="POST" action="{{ url_for('register') }}" class="register-form">
