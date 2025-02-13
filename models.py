@@ -1,13 +1,13 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, current_user
 from datetime import datetime
+from app import db
+from extensions import db, migrate
 
 """
 One-to-Many Relationship
 The Book and User Database structures will be modular and connected.
 """
-
-db = SQLAlchemy()
 
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,6 +26,9 @@ class Book(db.Model):
     reading_statuses = db.relationship("ReadingStatus", backref="book", lazy="dynamic")
     # Relationship: One Book -> Many Quotes
     quotes = db.relationship("Quote", backref="book", lazy="dynamic")
+    
+    def __repr__(self):
+        return f'<Book {self.title}>'
 
 
 class Review(db.Model):

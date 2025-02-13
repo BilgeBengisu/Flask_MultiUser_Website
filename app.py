@@ -1,4 +1,6 @@
 from flask import Flask, render_template, url_for, redirect, request, flash
+from models import * 
+from extensions import db
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import os
@@ -13,15 +15,14 @@ app = Flask(__name__)
 app.secret_key = "hello"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
+
+with app.app_context():
+    db.create_all()
 
 # Set the upload folder in app configuration
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-# Initializing the database
-db = SQLAlchemy(app)
-#Enabling Flask-Migrate
-migrate = Migrate(app, db) 
 
 ## User Setup ##
 #Initializing LoginManager which connects the app with Flask Login
