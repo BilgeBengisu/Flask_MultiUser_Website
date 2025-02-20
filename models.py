@@ -1,13 +1,30 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, current_user
 from datetime import datetime
-from app import db
 from extensions import db, migrate
 
 """
 One-to-Many Relationship
 The Book and User Database structures will be modular and connected.
 """
+
+# Defining User Model
+# UserMixin is used as a helper class by Flask-Login to manage user sessions
+# Adding UserMixin as parameter enables its use by the User model
+# db.Model from flask_sqlalchemy is ubeing inherited by the user class that represents a database table
+class User(UserMixin, db.Model):
+    # main elements: id, username, password
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)  # Store hashed password
+    profile_image = db.Column(db.String(150), default='static/uploads/default_profile.jpg') 
+    wallpaper_image = db.Column(db.String(150), default='static/uploads/default_wallpaper.jpg')
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
